@@ -52,7 +52,6 @@
             this.label_mot_de_passe.Size = new System.Drawing.Size(77, 13);
             this.label_mot_de_passe.TabIndex = 0;
             this.label_mot_de_passe.Text = "Mot de passe :";
-
             // 
             // button_connexion
             // 
@@ -70,7 +69,6 @@
             this.text_box_login.Name = "text_box_login";
             this.text_box_login.Size = new System.Drawing.Size(132, 20);
             this.text_box_login.TabIndex = 1;
-
             // 
             // text_box_mot_de_passe
             // 

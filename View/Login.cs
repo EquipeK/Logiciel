@@ -10,8 +10,16 @@ using System.Windows.Forms;
 using Logiciel.cs.Controller;
 namespace Logiciel.cs.View
 {
-    public partial class Login : Form
+    public partial class Login : Form, ILogin
     {
+        public event EventHandler request;
+        public string Test
+        {
+            set
+            {
+                this.text_box_login.Text = value;
+            }
+        }
         public Login()
         {
             InitializeComponent();
@@ -25,17 +33,9 @@ namespace Logiciel.cs.View
             }
             else
             {
-                Controller.Login.verifierLogin(this.text_box_login.Text, this.text_box_mot_de_passe.Text);
+                MessageBox.Show("lste"+this.text_box_login);                
+                request(this, EventArgs.Empty);
             }
         }
-
-        private void label_mot_de_passe_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-
     }
 }
