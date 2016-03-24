@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Logiciel.Controller;
+using Logiciel.cs.Controller;
 namespace Logiciel.cs.View
 {
     public partial class Login : Form

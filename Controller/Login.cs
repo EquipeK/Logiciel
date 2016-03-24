@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logiciel.Controller
+
+namespace Logiciel.cs.Controller
 {
     class Login
     {
@@ -22,7 +23,6 @@ namespace Logiciel.Controller
             get { return mot_de_passe; }
             private set { mot_de_passe = value; }
         }
-
         public Login()
         {
             Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
