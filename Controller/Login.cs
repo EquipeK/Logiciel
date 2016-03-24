@@ -26,7 +26,6 @@ namespace Logiciel.cs.Controller
         public Login()
         {
             Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
-            //viewLogin.
         }
         public static bool verifierLogin(string email, string password)
         {
