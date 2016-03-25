@@ -10,7 +10,6 @@ namespace Logiciel.cs.Controller
 {
     class Login
     {
-        private cs.View.ILogin IViewLogin = null;
         private string email;
         public string Email
         {
@@ -24,21 +23,26 @@ namespace Logiciel.cs.Controller
             get { return mot_de_passe; }
             private set { mot_de_passe = value; }
         }
+        Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
+
         public Login()
         {
-            Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
+            viewLogin.request += onRequest;
             viewLogin.ShowDialog();
-            IViewLogin.request += onRequest;
-            IViewLogin.Test = "";
         }
         public string verifierLogin(string email, string password)
         {
-            return "";
+            MessageBox.Show(email + "" + password);
+            return email+""+password;
         }
 
-        private void onRequest(object sender, EventArgs e)
+        public void onRequest(object sender, EventArgs e)
         {
-            //MessageBox.Show()
+            Email = viewLogin.Email;
+            Mot_de_passe = viewLogin.Mot_de_passe;
+            verifierLogin(Email, Mot_de_passe);
         }
+
     }
+
 }

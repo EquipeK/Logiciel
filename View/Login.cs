@@ -12,13 +12,20 @@ namespace Logiciel.cs.View
 {
     public partial class Login : Form, ILogin
     {
-        public event EventHandler request;
-        public string Test
+        public event EventHandler<EventArgs> request;
+        private string email;
+
+        public string Email
         {
-            set
-            {
-                this.text_box_login.Text = value;
-            }
+            get { return email; }
+            set { email = value; }
+        }
+        private string mot_de_passe;
+
+        public string Mot_de_passe
+        {
+            get { return mot_de_passe; }
+            set { mot_de_passe = value; }
         }
         public Login()
         {
@@ -27,15 +34,27 @@ namespace Logiciel.cs.View
 
         private void click_connexion(object sender, EventArgs e)
         {
+            EventHandler<EventArgs> request_connexion = request;
             if (this.text_box_login.Text == "" || this.text_box_mot_de_passe.Text == "")
             {
                 MessageBox.Show("Login et/ou mot de passe est incorrect");
             }
             else
             {
-                MessageBox.Show("lste"+this.text_box_login);                
-                request(this, EventArgs.Empty);
+                if (request_connexion != null)
+                {
+                    Email = this.text_box_login.Text;
+                    Mot_de_passe = this.text_box_mot_de_passe.Text;
+                    request_connexion(this, e);
+                }
             }
         }
+
+        public override string ToString()
+        {
+            return this.text_box_login.Text + " | " + this.text_box_mot_de_passe.Text;
+        }
+
+        
     }
 }

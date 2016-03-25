@@ -96,7 +96,7 @@
 
         private System.Windows.Forms.Label label_login;
         private System.Windows.Forms.Label label_mot_de_passe;
-        private System.Windows.Forms.Button button_connexion;
+        public System.Windows.Forms.Button button_connexion;
         private System.Windows.Forms.TextBox text_box_login;
         private System.Windows.Forms.TextBox text_box_mot_de_passe;
 

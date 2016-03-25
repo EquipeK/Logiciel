@@ -8,7 +8,8 @@ namespace Logiciel.cs.View
 {
     interface ILogin
     {
-        event EventHandler request;
-        string Test {set;}
+        event EventHandler<EventArgs> request;
+        string Email { get; set; }
+        string Mot_de_passe { get; set; }
     }
 }
