@@ -24,7 +24,7 @@ namespace Logiciel.cs.Controller
             private set { mot_de_passe = value; }
         }
         Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
-
+        Logiciel.cs.View.Bureau viewBureau = new Logiciel.cs.View.Bureau();
         public Login()
         {
             viewLogin.request += onRequest;
@@ -32,8 +32,12 @@ namespace Logiciel.cs.Controller
         }
         public string verifierLogin(string email, string password)
         {
-            MessageBox.Show(email + "" + password);
-            return email+""+password;
+            if (true)
+            {
+                viewLogin.Hide();
+                viewBureau.ShowDialog();
+            }
+            return "";
         }
 
         public void onRequest(object sender, EventArgs e)
