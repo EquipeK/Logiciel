@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Logiciel.cs.Model;
 
 
 namespace Logiciel.cs.Controller
@@ -24,20 +25,23 @@ namespace Logiciel.cs.Controller
             private set { mot_de_passe = value; }
         }
         Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
-        Logiciel.cs.View.Bureau viewBureau = new Logiciel.cs.View.Bureau();
+        cs.Model.Users gestUser = null;
         public Login()
         {
             viewLogin.request += onRequest;
             viewLogin.ShowDialog();
+            
         }
-        public string verifierLogin(string email, string password)
+        public void verifierLogin(string email, string password)
         {
-            if (true)
+            gestUser = new cs.Model.Users();
+            Users user = gestUser.verifUser(email,password);
+
+            if (user != null)
             {
                 viewLogin.Hide();
-                viewBureau.ShowDialog();
+                Bureau bureauCtrl = new Bureau(user);
             }
-            return "";
         }
 
         public void onRequest(object sender, EventArgs e)
@@ -46,7 +50,6 @@ namespace Logiciel.cs.Controller
             Mot_de_passe = viewLogin.Mot_de_passe;
             verifierLogin(Email, Mot_de_passe);
         }
-
     }
 
 }
