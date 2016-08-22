@@ -21,6 +21,7 @@ namespace Logiciel.cs.Model
         public DateTime users_createdAt { get; set; }
         public DateTime users_editedAt { get; set; }
         public DateTime users_deletedAt { get; set; }
+        public List<IUsers> listUsers = new List<IUsers>(); 
         
         public Users()
         {
@@ -57,6 +58,31 @@ namespace Logiciel.cs.Model
         public int createUser(Users user)
         {
             return inter.createUser(user);
+        }
+
+        public int deleteUser(string id)
+        {
+            return inter.deleteUser(id);
+        }
+
+        public List<IUsers> getListUsers()
+        {
+            inter.ListerTable();
+            listUsers = inter.Users;
+            return listUsers;
+        }
+
+        public Users getUser(int id)
+        {
+            Users user = new Users();
+            inter.ListerTable();
+            foreach (Users usr in inter.getUsers())
+            {
+                if(usr.id_users == id){
+                    user = usr;
+                }
+            }
+            return user;
         }
     }
 }

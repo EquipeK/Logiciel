@@ -62,7 +62,6 @@ namespace Logiciel.cs.Controller
         public void getGroup()
         {
             modelGroup = new cs.Model.Groups("");
-
             List<IGroups> list = new List<IGroups>();
             list = modelGroup.getListGroup();
             viewBureau = new View.Bureau(list);

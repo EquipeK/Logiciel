@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.panelMenu = new System.Windows.Forms.Panel();
-            this.btn_users = new System.Windows.Forms.Button();
+            this.btn_list_user = new System.Windows.Forms.Button();
             this.btn_profil = new System.Windows.Forms.Button();
             this.btn_panier = new System.Windows.Forms.Button();
             this.btn_revendeur = new System.Windows.Forms.Button();
@@ -46,6 +46,8 @@
             this.label_role = new System.Windows.Forms.Label();
             this.label_email = new System.Windows.Forms.Label();
             this.panel_stock = new System.Windows.Forms.Panel();
+            this.btn_stock_preorder = new System.Windows.Forms.Button();
+            this.btn_create_product = new System.Windows.Forms.Button();
             this.gridViewStock = new System.Windows.Forms.DataGridView();
             this.panel_add_user = new System.Windows.Forms.Panel();
             this.add_user_btn_create = new System.Windows.Forms.Button();
@@ -62,6 +64,26 @@
             this.add_user_label_email = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel_parent = new System.Windows.Forms.Panel();
+            this.panel_preorder = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel_create_stock = new System.Windows.Forms.Panel();
+            this.btn_create_stock = new System.Windows.Forms.Button();
+            this.label_create_stock_description = new System.Windows.Forms.Label();
+            this.rich_text_box_create_stock = new System.Windows.Forms.RichTextBox();
+            this.label_create_stock_category = new System.Windows.Forms.Label();
+            this.checked_list_box_create_stock = new System.Windows.Forms.CheckedListBox();
+            this.input_create_stock_quantity = new System.Windows.Forms.TextBox();
+            this.input_create_stock_slug = new System.Windows.Forms.TextBox();
+            this.input_create_stock_reference = new System.Windows.Forms.TextBox();
+            this.input_create_stock_name = new System.Windows.Forms.TextBox();
+            this.label_create_stock_quantity = new System.Windows.Forms.Label();
+            this.label_create_stock_slug = new System.Windows.Forms.Label();
+            this.label_create_stock_référence = new System.Windows.Forms.Label();
+            this.label_create_stock_name = new System.Windows.Forms.Label();
+            this.panel_list_users = new System.Windows.Forms.Panel();
+            this.btn_create_user = new System.Windows.Forms.Button();
+            this.gridViewUsers = new System.Windows.Forms.DataGridView();
+            this.gridViewCart = new System.Windows.Forms.DataGridView();
             this.panelMenu.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelUsers.SuspendLayout();
@@ -69,33 +91,38 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewStock)).BeginInit();
             this.panel_add_user.SuspendLayout();
             this.panel_parent.SuspendLayout();
+            this.panel_preorder.SuspendLayout();
+            this.panel_create_stock.SuspendLayout();
+            this.panel_list_users.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewUsers)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewCart)).BeginInit();
             this.SuspendLayout();
             // 
             // panelMenu
             // 
-            this.panelMenu.Controls.Add(this.btn_users);
+            this.panelMenu.Controls.Add(this.btn_list_user);
             this.panelMenu.Controls.Add(this.btn_profil);
             this.panelMenu.Controls.Add(this.btn_panier);
             this.panelMenu.Controls.Add(this.btn_revendeur);
             this.panelMenu.Controls.Add(this.btn_stock);
             this.panelMenu.Location = new System.Drawing.Point(-1, 0);
             this.panelMenu.Name = "panelMenu";
-            this.panelMenu.Size = new System.Drawing.Size(128, 440);
+            this.panelMenu.Size = new System.Drawing.Size(128, 533);
             this.panelMenu.TabIndex = 0;
             // 
-            // btn_users
+            // btn_list_user
             // 
-            this.btn_users.Location = new System.Drawing.Point(3, 107);
-            this.btn_users.Name = "btn_users";
-            this.btn_users.Size = new System.Drawing.Size(122, 23);
-            this.btn_users.TabIndex = 4;
-            this.btn_users.Text = "Utilisateurs";
-            this.btn_users.UseVisualStyleBackColor = true;
-            this.btn_users.Click += new System.EventHandler(this.btn_users_Click);
+            this.btn_list_user.Location = new System.Drawing.Point(3, 77);
+            this.btn_list_user.Name = "btn_list_user";
+            this.btn_list_user.Size = new System.Drawing.Size(122, 23);
+            this.btn_list_user.TabIndex = 5;
+            this.btn_list_user.Text = "Lister utilisateurs";
+            this.btn_list_user.UseVisualStyleBackColor = true;
+            this.btn_list_user.Click += new System.EventHandler(this.btn_list_user_Click);
             // 
             // btn_profil
             // 
-            this.btn_profil.Location = new System.Drawing.Point(3, 78);
+            this.btn_profil.Location = new System.Drawing.Point(3, 507);
             this.btn_profil.Name = "btn_profil";
             this.btn_profil.Size = new System.Drawing.Size(122, 23);
             this.btn_profil.TabIndex = 3;
@@ -105,12 +132,13 @@
             // 
             // btn_panier
             // 
-            this.btn_panier.Location = new System.Drawing.Point(3, 56);
+            this.btn_panier.Location = new System.Drawing.Point(3, 54);
             this.btn_panier.Name = "btn_panier";
             this.btn_panier.Size = new System.Drawing.Size(122, 23);
             this.btn_panier.TabIndex = 2;
             this.btn_panier.Text = "Panier";
             this.btn_panier.UseVisualStyleBackColor = true;
+            this.btn_panier.Click += new System.EventHandler(this.btn_panier_Click);
             // 
             // btn_revendeur
             // 
@@ -179,9 +207,9 @@
             this.panelUsers.Controls.Add(this.label_signature);
             this.panelUsers.Controls.Add(this.label_role);
             this.panelUsers.Controls.Add(this.label_email);
-            this.panelUsers.Location = new System.Drawing.Point(3, 19);
+            this.panelUsers.Location = new System.Drawing.Point(3, 7);
             this.panelUsers.Name = "panelUsers";
-            this.panelUsers.Size = new System.Drawing.Size(49, 44);
+            this.panelUsers.Size = new System.Drawing.Size(540, 383);
             this.panelUsers.TabIndex = 2;
             // 
             // label_signature2
@@ -236,18 +264,40 @@
             // 
             // panel_stock
             // 
+            this.panel_stock.Controls.Add(this.btn_stock_preorder);
+            this.panel_stock.Controls.Add(this.btn_create_product);
             this.panel_stock.Controls.Add(this.gridViewStock);
-            this.panel_stock.Location = new System.Drawing.Point(22, 171);
+            this.panel_stock.Location = new System.Drawing.Point(0, 0);
             this.panel_stock.Name = "panel_stock";
-            this.panel_stock.Size = new System.Drawing.Size(59, 79);
+            this.panel_stock.Size = new System.Drawing.Size(543, 472);
             this.panel_stock.TabIndex = 6;
+            // 
+            // btn_stock_preorder
+            // 
+            this.btn_stock_preorder.Location = new System.Drawing.Point(390, 396);
+            this.btn_stock_preorder.Name = "btn_stock_preorder";
+            this.btn_stock_preorder.Size = new System.Drawing.Size(75, 23);
+            this.btn_stock_preorder.TabIndex = 2;
+            this.btn_stock_preorder.Text = "Commander";
+            this.btn_stock_preorder.UseVisualStyleBackColor = true;
+            this.btn_stock_preorder.Click += new System.EventHandler(this.btn_stock_preorder_Click);
+            // 
+            // btn_create_product
+            // 
+            this.btn_create_product.Location = new System.Drawing.Point(412, 0);
+            this.btn_create_product.Name = "btn_create_product";
+            this.btn_create_product.Size = new System.Drawing.Size(116, 31);
+            this.btn_create_product.TabIndex = 1;
+            this.btn_create_product.Text = "Créer un produit";
+            this.btn_create_product.UseVisualStyleBackColor = true;
+            this.btn_create_product.Click += new System.EventHandler(this.btn_create_product_Click);
             // 
             // gridViewStock
             // 
             this.gridViewStock.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridViewStock.Location = new System.Drawing.Point(35, 69);
+            this.gridViewStock.Location = new System.Drawing.Point(6, 55);
             this.gridViewStock.Name = "gridViewStock";
-            this.gridViewStock.Size = new System.Drawing.Size(485, 262);
+            this.gridViewStock.Size = new System.Drawing.Size(522, 330);
             this.gridViewStock.TabIndex = 0;
             // 
             // panel_add_user
@@ -266,7 +316,7 @@
             this.panel_add_user.Controls.Add(this.add_user_label_email);
             this.panel_add_user.Location = new System.Drawing.Point(0, 0);
             this.panel_add_user.Name = "panel_add_user";
-            this.panel_add_user.Size = new System.Drawing.Size(550, 388);
+            this.panel_add_user.Size = new System.Drawing.Size(546, 388);
             this.panel_add_user.TabIndex = 5;
             // 
             // add_user_btn_create
@@ -377,19 +427,203 @@
             // 
             // panel_parent
             // 
-            this.panel_parent.Controls.Add(this.panel_add_user);
-            this.panel_parent.Controls.Add(this.panelUsers);
+            this.panel_parent.Controls.Add(this.panel_preorder);
             this.panel_parent.Controls.Add(this.panel_stock);
+            this.panel_parent.Controls.Add(this.panel_create_stock);
+            this.panel_parent.Controls.Add(this.panel_list_users);
+            this.panel_parent.Controls.Add(this.panelUsers);
+            this.panel_parent.Controls.Add(this.panel_add_user);
             this.panel_parent.Location = new System.Drawing.Point(133, 49);
             this.panel_parent.Name = "panel_parent";
-            this.panel_parent.Size = new System.Drawing.Size(549, 391);
+            this.panel_parent.Size = new System.Drawing.Size(549, 481);
             this.panel_parent.TabIndex = 3;
+            // 
+            // panel_preorder
+            // 
+            this.panel_preorder.Controls.Add(this.gridViewCart);
+            this.panel_preorder.Controls.Add(this.label3);
+            this.panel_preorder.Location = new System.Drawing.Point(0, 0);
+            this.panel_preorder.Name = "panel_preorder";
+            this.panel_preorder.Size = new System.Drawing.Size(541, 469);
+            this.panel_preorder.TabIndex = 3;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 13);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Panier";
+            // 
+            // panel_create_stock
+            // 
+            this.panel_create_stock.Controls.Add(this.btn_create_stock);
+            this.panel_create_stock.Controls.Add(this.label_create_stock_description);
+            this.panel_create_stock.Controls.Add(this.rich_text_box_create_stock);
+            this.panel_create_stock.Controls.Add(this.label_create_stock_category);
+            this.panel_create_stock.Controls.Add(this.checked_list_box_create_stock);
+            this.panel_create_stock.Controls.Add(this.input_create_stock_quantity);
+            this.panel_create_stock.Controls.Add(this.input_create_stock_slug);
+            this.panel_create_stock.Controls.Add(this.input_create_stock_reference);
+            this.panel_create_stock.Controls.Add(this.input_create_stock_name);
+            this.panel_create_stock.Controls.Add(this.label_create_stock_quantity);
+            this.panel_create_stock.Controls.Add(this.label_create_stock_slug);
+            this.panel_create_stock.Controls.Add(this.label_create_stock_référence);
+            this.panel_create_stock.Controls.Add(this.label_create_stock_name);
+            this.panel_create_stock.Location = new System.Drawing.Point(0, 0);
+            this.panel_create_stock.Name = "panel_create_stock";
+            this.panel_create_stock.Size = new System.Drawing.Size(537, 385);
+            this.panel_create_stock.TabIndex = 2;
+            // 
+            // btn_create_stock
+            // 
+            this.btn_create_stock.Location = new System.Drawing.Point(352, 323);
+            this.btn_create_stock.Name = "btn_create_stock";
+            this.btn_create_stock.Size = new System.Drawing.Size(94, 23);
+            this.btn_create_stock.TabIndex = 12;
+            this.btn_create_stock.Text = "Enregistrer";
+            this.btn_create_stock.UseVisualStyleBackColor = true;
+            this.btn_create_stock.Click += new System.EventHandler(this.btn_create_stock_Click);
+            // 
+            // label_create_stock_description
+            // 
+            this.label_create_stock_description.AutoSize = true;
+            this.label_create_stock_description.Location = new System.Drawing.Point(41, 221);
+            this.label_create_stock_description.Name = "label_create_stock_description";
+            this.label_create_stock_description.Size = new System.Drawing.Size(66, 13);
+            this.label_create_stock_description.TabIndex = 11;
+            this.label_create_stock_description.Text = "Description :";
+            // 
+            // rich_text_box_create_stock
+            // 
+            this.rich_text_box_create_stock.Location = new System.Drawing.Point(44, 237);
+            this.rich_text_box_create_stock.Name = "rich_text_box_create_stock";
+            this.rich_text_box_create_stock.Size = new System.Drawing.Size(206, 109);
+            this.rich_text_box_create_stock.TabIndex = 10;
+            this.rich_text_box_create_stock.Text = "";
+            // 
+            // label_create_stock_category
+            // 
+            this.label_create_stock_category.AutoSize = true;
+            this.label_create_stock_category.Location = new System.Drawing.Point(272, 26);
+            this.label_create_stock_category.Name = "label_create_stock_category";
+            this.label_create_stock_category.Size = new System.Drawing.Size(58, 13);
+            this.label_create_stock_category.TabIndex = 9;
+            this.label_create_stock_category.Text = "Catégorie :";
+            // 
+            // checked_list_box_create_stock
+            // 
+            this.checked_list_box_create_stock.FormattingEnabled = true;
+            this.checked_list_box_create_stock.Location = new System.Drawing.Point(275, 42);
+            this.checked_list_box_create_stock.Name = "checked_list_box_create_stock";
+            this.checked_list_box_create_stock.Size = new System.Drawing.Size(171, 154);
+            this.checked_list_box_create_stock.TabIndex = 8;
+            // 
+            // input_create_stock_quantity
+            // 
+            this.input_create_stock_quantity.Location = new System.Drawing.Point(44, 183);
+            this.input_create_stock_quantity.Name = "input_create_stock_quantity";
+            this.input_create_stock_quantity.Size = new System.Drawing.Size(100, 20);
+            this.input_create_stock_quantity.TabIndex = 7;
+            // 
+            // input_create_stock_slug
+            // 
+            this.input_create_stock_slug.Location = new System.Drawing.Point(44, 140);
+            this.input_create_stock_slug.Name = "input_create_stock_slug";
+            this.input_create_stock_slug.Size = new System.Drawing.Size(100, 20);
+            this.input_create_stock_slug.TabIndex = 6;
+            // 
+            // input_create_stock_reference
+            // 
+            this.input_create_stock_reference.Location = new System.Drawing.Point(44, 94);
+            this.input_create_stock_reference.Name = "input_create_stock_reference";
+            this.input_create_stock_reference.Size = new System.Drawing.Size(100, 20);
+            this.input_create_stock_reference.TabIndex = 5;
+            // 
+            // input_create_stock_name
+            // 
+            this.input_create_stock_name.Location = new System.Drawing.Point(44, 42);
+            this.input_create_stock_name.Name = "input_create_stock_name";
+            this.input_create_stock_name.Size = new System.Drawing.Size(100, 20);
+            this.input_create_stock_name.TabIndex = 4;
+            // 
+            // label_create_stock_quantity
+            // 
+            this.label_create_stock_quantity.AutoSize = true;
+            this.label_create_stock_quantity.Location = new System.Drawing.Point(41, 167);
+            this.label_create_stock_quantity.Name = "label_create_stock_quantity";
+            this.label_create_stock_quantity.Size = new System.Drawing.Size(50, 13);
+            this.label_create_stock_quantity.TabIndex = 3;
+            this.label_create_stock_quantity.Text = "Quantié :";
+            // 
+            // label_create_stock_slug
+            // 
+            this.label_create_stock_slug.AutoSize = true;
+            this.label_create_stock_slug.Location = new System.Drawing.Point(41, 122);
+            this.label_create_stock_slug.Name = "label_create_stock_slug";
+            this.label_create_stock_slug.Size = new System.Drawing.Size(34, 13);
+            this.label_create_stock_slug.TabIndex = 2;
+            this.label_create_stock_slug.Text = "Slug :";
+            // 
+            // label_create_stock_référence
+            // 
+            this.label_create_stock_référence.AutoSize = true;
+            this.label_create_stock_référence.Location = new System.Drawing.Point(41, 75);
+            this.label_create_stock_référence.Name = "label_create_stock_référence";
+            this.label_create_stock_référence.Size = new System.Drawing.Size(63, 13);
+            this.label_create_stock_référence.TabIndex = 1;
+            this.label_create_stock_référence.Text = "Référence :";
+            // 
+            // label_create_stock_name
+            // 
+            this.label_create_stock_name.AutoSize = true;
+            this.label_create_stock_name.Location = new System.Drawing.Point(41, 26);
+            this.label_create_stock_name.Name = "label_create_stock_name";
+            this.label_create_stock_name.Size = new System.Drawing.Size(88, 13);
+            this.label_create_stock_name.TabIndex = 0;
+            this.label_create_stock_name.Text = "Nom du produit : ";
+            // 
+            // panel_list_users
+            // 
+            this.panel_list_users.Controls.Add(this.btn_create_user);
+            this.panel_list_users.Controls.Add(this.gridViewUsers);
+            this.panel_list_users.Location = new System.Drawing.Point(0, 0);
+            this.panel_list_users.Name = "panel_list_users";
+            this.panel_list_users.Size = new System.Drawing.Size(550, 385);
+            this.panel_list_users.TabIndex = 1;
+            // 
+            // btn_create_user
+            // 
+            this.btn_create_user.Location = new System.Drawing.Point(412, 7);
+            this.btn_create_user.Name = "btn_create_user";
+            this.btn_create_user.Size = new System.Drawing.Size(116, 17);
+            this.btn_create_user.TabIndex = 2;
+            this.btn_create_user.Text = "Créer un utilisateur";
+            this.btn_create_user.UseVisualStyleBackColor = true;
+            this.btn_create_user.Click += new System.EventHandler(this.btn_create_user_Click);
+            // 
+            // gridViewUsers
+            // 
+            this.gridViewUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridViewUsers.Location = new System.Drawing.Point(35, 57);
+            this.gridViewUsers.Name = "gridViewUsers";
+            this.gridViewUsers.Size = new System.Drawing.Size(493, 312);
+            this.gridViewUsers.TabIndex = 1;
+            // 
+            // gridViewCart
+            // 
+            this.gridViewCart.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridViewCart.Location = new System.Drawing.Point(35, 41);
+            this.gridViewCart.Name = "gridViewCart";
+            this.gridViewCart.Size = new System.Drawing.Size(481, 288);
+            this.gridViewCart.TabIndex = 1;
             // 
             // Bureau
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 452);
+            this.ClientSize = new System.Drawing.Size(684, 533);
             this.Controls.Add(this.panel_parent);
             this.Controls.Add(this.panelHeader);
             this.Controls.Add(this.panelMenu);
@@ -405,6 +639,13 @@
             this.panel_add_user.ResumeLayout(false);
             this.panel_add_user.PerformLayout();
             this.panel_parent.ResumeLayout(false);
+            this.panel_preorder.ResumeLayout(false);
+            this.panel_preorder.PerformLayout();
+            this.panel_create_stock.ResumeLayout(false);
+            this.panel_create_stock.PerformLayout();
+            this.panel_list_users.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewUsers)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewCart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -429,7 +670,6 @@
         private System.Windows.Forms.Panel panel_stock;
         private System.Windows.Forms.Label label_signature2;
         private System.Windows.Forms.DataGridView gridViewStock;
-        private System.Windows.Forms.Button btn_users;
         private System.Windows.Forms.Panel panel_add_user;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label add_user_label_email;
@@ -445,5 +685,28 @@
         private System.Windows.Forms.TextBox add_user_input_prenom;
         private System.Windows.Forms.Button add_user_btn_create;
         private System.Windows.Forms.Button add_user_btn_add_group;
+        private System.Windows.Forms.Button btn_list_user;
+        private System.Windows.Forms.Panel panel_list_users;
+        private System.Windows.Forms.DataGridView gridViewUsers;
+        private System.Windows.Forms.Button btn_create_user;
+        private System.Windows.Forms.Button btn_create_product;
+        private System.Windows.Forms.Panel panel_create_stock;
+        private System.Windows.Forms.TextBox input_create_stock_slug;
+        private System.Windows.Forms.TextBox input_create_stock_reference;
+        private System.Windows.Forms.TextBox input_create_stock_name;
+        private System.Windows.Forms.Label label_create_stock_quantity;
+        private System.Windows.Forms.Label label_create_stock_slug;
+        private System.Windows.Forms.Label label_create_stock_référence;
+        private System.Windows.Forms.Label label_create_stock_name;
+        private System.Windows.Forms.CheckedListBox checked_list_box_create_stock;
+        private System.Windows.Forms.TextBox input_create_stock_quantity;
+        private System.Windows.Forms.Label label_create_stock_description;
+        private System.Windows.Forms.RichTextBox rich_text_box_create_stock;
+        private System.Windows.Forms.Label label_create_stock_category;
+        private System.Windows.Forms.Button btn_create_stock;
+        private System.Windows.Forms.Button btn_stock_preorder;
+        private System.Windows.Forms.Panel panel_preorder;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridView gridViewCart;
     }
 }
