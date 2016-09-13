@@ -24,6 +24,7 @@ namespace Logiciel.cs.Model
         public List<ICategory> Categories { get { return getCategories(); } }
         /* Constrcuteur */
 
+        //Constructeur initialisant la connexion à la BDD
         public InterfaceDeDonnees()
         {
             //bddName = ConfigurationManager.ConnectionStrings[0].Name;
@@ -31,21 +32,24 @@ namespace Logiciel.cs.Model
             logicielConnexion = new MySqlConnection(connexion);
         }
 
+        //Methode appellant le Controller login
         public void runApp()
         {
             cs.Controller.Login log = new cs.Controller.Login();
         }
 
+        //Methode ouvrant la connexion à la BDD
         public void openConnection()
         {
             logicielConnexion.Open();
         }
 
+        //Methode remplissant les dataTables issus de la BDD
         public void ListerTable()
         {
             try
             {
-                logicielConnexion.Open();
+                openConnection();
 
                 try
                 {
@@ -71,7 +75,6 @@ namespace Logiciel.cs.Model
                     daCategories.Fill(dsStock, "categories");
                     tCategory = dsStock.Tables["categories"];
                     
-                    closeConnection();
                 }
                 catch (MySqlException e)
                 {
@@ -92,7 +95,7 @@ namespace Logiciel.cs.Model
             }
         }
 
-
+        //Methode remplissant la liste utilisateur via le dataTable
         public List<IUsers> getUsers()
         {
             List<IUsers> userList = new List<IUsers>();
@@ -114,6 +117,7 @@ namespace Logiciel.cs.Model
             return userList;
         }
 
+        //Methode remplissant la liste des groups de droit via le dataTable
         public List<IGroups> getGroups()
         {
             List<IGroups> groupList = new List<IGroups>();
@@ -129,6 +133,7 @@ namespace Logiciel.cs.Model
             return groupList;
         }
 
+        //Methode remplissant la liste des produits via le dataTable
         public List<IProducts> getProducts()
         {
             List<IProducts> productList = new List<IProducts>();
@@ -149,7 +154,7 @@ namespace Logiciel.cs.Model
             return productList;
         }
 
-
+        //Methode remplissant la liste des categories via le dataTable
         public List<ICategory> getCategories()
         {
             List<ICategory> categoryList = new List<ICategory>();
@@ -167,11 +172,13 @@ namespace Logiciel.cs.Model
             return categoryList;
         }
 
+        //ethode fermant la connexion à la base
         public void closeConnection()
         {
             logicielConnexion.Close();
         }
 
+        //Methode de creation utilisateur dans la BDD
         public int createUser(Users user)
         {
             int retour = 0;
@@ -179,7 +186,7 @@ namespace Logiciel.cs.Model
             Groups grp = new Groups();
             try
             {
-                logicielConnexion.Open();
+                openConnection();
                 try
                 {
                     string requete = "INSERT INTO user (firstname, lastname, email, password, created_at, id_group, signature) VALUES (?firstname,?lastname,?email, ?password, ?created_at, ?id_group, ?signature)";
@@ -209,7 +216,7 @@ namespace Logiciel.cs.Model
             }
             finally
             {
-                logicielConnexion.Close();
+                closeConnection();
             }
             
             //daGroups.InsertCommand.Parameters.AddWithValue("@id_group", id_group);
@@ -218,13 +225,14 @@ namespace Logiciel.cs.Model
             return retour;
         }
 
+        //Methode "supprimant" un utilisateur de la BDD
         public int deleteUser(string id)
         {
             int retour = 0;
             DateTime deleted = DateTime.Now;
             try
             {
-                logicielConnexion.Open();
+                openConnection();
                 try
                 {
                     string requete = "UPDATE user SET deleted_at=@deleted WHERE id_user=@id";
@@ -247,18 +255,19 @@ namespace Logiciel.cs.Model
             }
             finally
             {
-                logicielConnexion.Close();
+                closeConnection();
             }
             return retour;
         }
 
+        //Methode de création d'un produit dans la BDD avec les categories appartennant
         public int createProduct(Products product, List<int> ids_category)
         {
             int retour = 0;
             DateTime created_at = DateTime.Now;
             try
             {
-                logicielConnexion.Open();
+                openConnection();
                 try
                 {
                     
@@ -281,11 +290,10 @@ namespace Logiciel.cs.Model
                     command.Parameters.AddWithValue("?description1", product.description1);
                     command.Parameters.AddWithValue("?description2", product.description2);
                     retour = command.ExecuteNonQuery();
-                    logicielConnexion.Close();
+                    closeConnection();
                     ListerTable();
-                    logicielConnexion.Open();
+                    openConnection();
                     
-                    MessageBox.Show("last element "+ idToIncr.ToString());
                     foreach (int id_cat in ids_category)
                     {
                         requete = "INSERT INTO product_has_category (product_id_product, category_id_category)" +
@@ -311,18 +319,19 @@ namespace Logiciel.cs.Model
             }
             finally
             {
-                logicielConnexion.Close();
+                closeConnection();
             }
             return retour;
         }
 
+        //Methode "supprimant" un produit dans la BDD
         public int deleteProduct(string id)
         {
             int retour = 0;
             DateTime deleted = DateTime.Now; 
             try
             {
-                logicielConnexion.Open();
+                openConnection();
                 try
                 {
                     string requete = "UPDATE product SET deleted_at=@deleted WHERE id_product=@id";
@@ -345,11 +354,12 @@ namespace Logiciel.cs.Model
             }
             finally
             {
-                logicielConnexion.Close();
+                closeConnection();
             }
             return retour;
         }
 
+        //Methode recuperant un produit et ses categories
         public List<ICategory> getProductWithCategories(int id_product) {
 
             MySqlCommand maCommand = new MySqlCommand();
@@ -368,6 +378,7 @@ namespace Logiciel.cs.Model
             return listCategoriesWithProduct;
         }
 
+        //Methode de création d'un panier 
         public int createPreOrder(Users user)
         {
             long retour = 0;
@@ -405,11 +416,12 @@ namespace Logiciel.cs.Model
             return (int)retour;
         }
 
+        //methode de création d'un panier de produit
         public void createPreOrderToProduct(int id_preorder, int id_product, int quantity)
         {
             try
             {
-                logicielConnexion.Open();
+                openConnection();
                 try
                 {
                     string requete = "INSERT INTO preorder_to_product (id_preorder,id_product,quantity) VALUES (?id_preorder,?id_product,?quantity);";
@@ -432,7 +444,7 @@ namespace Logiciel.cs.Model
             }
             finally
             {
-                logicielConnexion.Close();
+                closeConnection();
             }
         }
     }

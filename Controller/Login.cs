@@ -11,6 +11,7 @@ namespace Logiciel.cs.Controller
 {
     class Login
     {
+        //Attribut pour la fenetre de connexion
         private string email;
         public string Email
         {
@@ -26,12 +27,16 @@ namespace Logiciel.cs.Controller
         }
         Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();
         cs.Model.Users gestUser = null;
+
+        //Contructeur affichant la fenetre de connexion au demarrage du logiciel
         public Login()
         {
             viewLogin.request += onRequest;
             viewLogin.ShowDialog();
             
         }
+
+        //Methode envoyant les idenfiants de l'utilisateur au model pour vérifié si celui-ci existe
         public void verifierLogin(string email, string password)
         {
             gestUser = new cs.Model.Users();
@@ -44,6 +49,7 @@ namespace Logiciel.cs.Controller
             }
         }
 
+        //Evenement sur le bouton de connexion qui recupere les identifiants
         public void onRequest(object sender, EventArgs e)
         {
             Email = viewLogin.Email;

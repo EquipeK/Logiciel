@@ -13,13 +13,19 @@ namespace Logiciel.cs.View
 {
     public partial class Bureau : Form
     {
-        public string label { get; set; }
-        public event EventHandler<EventArgs> loadGroupRequest;
-        public List<IGroups> listGroup = new List<IGroups>();
+        private string label { get; set; }
         private string label_group;
+        private List<IGroups> listGroup = new List<IGroups>();
         private List<IProducts> listCart = new List<IProducts>();
         private List<string> listQuantityToCommand = new List<string>();
         private Users userGlobal = new Users();
+
+        //Event Listener 
+        public event EventHandler<EventArgs> requestCloseSession;
+        public event EventHandler<EventArgs> loadGroupRequest;
+        public event EventHandler<EventArgs> requestDisplayUsers;
+
+        //Contructeur surchargé
         public Bureau(Users users)
         {
             userGlobal = users;
@@ -31,20 +37,19 @@ namespace Logiciel.cs.View
             this.label_signature2.Text = users.users_signature;
             this.panel_parent.Visible = true;
             this.panel_stock.Visible = false;
-            this.panelUsers.Visible = true;
+            this.panelUsers.Visible = false;
             this.panel_add_user.Visible = false;
-            this.panel_list_users.Visible = false;
+            this.panel_list_users.Visible = true;
             this.panel_preorder.Visible = false;
         }
+        
+        //Contructeur permettant initialisé le group de l'utilisateur
         public Bureau(List<IGroups> ListGroup)
         {
-
             this.listGroup = ListGroup;
-
-
         }
-        public event EventHandler<EventArgs> requestDisplayUsers;
-        public event EventHandler<EventArgs> requestCloseSession;
+
+        //Methode affichant l'entete 
         private void displayUsers(object sender, EventArgs e)
         {
             EventHandler<EventArgs> requestSendCtrl = requestDisplayUsers;
@@ -54,6 +59,7 @@ namespace Logiciel.cs.View
             }
         }
 
+        //Methode de deconnexion
         private void deconnexion(object sender, EventArgs e)
         {
             EventHandler<EventArgs> requestCloseSendCtrl = requestCloseSession;
@@ -63,6 +69,7 @@ namespace Logiciel.cs.View
             }
         }
 
+        //Methode affichant le profil de l'utilisateur 
         private void btn_profil_Click(object sender, EventArgs e)
         {
             this.panel_stock.Visible = false;
@@ -72,6 +79,7 @@ namespace Logiciel.cs.View
             this.panel_preorder.Visible = false;
         }
 
+        //Methode affichant le panel des stock
         private void btn_stock_Click(object sender, EventArgs e)
         {
             this.panel_stock.Visible = true;
@@ -86,6 +94,7 @@ namespace Logiciel.cs.View
 
         }
 
+        //Methode affichant le panel qui liste les utilisateurs
         private void btn_list_user_Click(object sender, EventArgs e)
         {
             this.panel_stock.Visible = false;
@@ -98,6 +107,7 @@ namespace Logiciel.cs.View
             FillDataGridViewUsers();
         }
 
+        //Methode envoyer les données saisis au model User pour créer un utilisateur
         private void add_user_btn_create_Click(object sender, EventArgs e)
         {
 
@@ -119,6 +129,7 @@ namespace Logiciel.cs.View
             }
         }
 
+        //Methode reinitialisant les champs du panel de création utilisateur après enregistrement
         private void init_input_create_user()
         {
             this.add_user_input_prenom.Text = "";
@@ -127,20 +138,22 @@ namespace Logiciel.cs.View
             this.add_user_input_password.Text = "";
         }
 
+        //Methode remplissant la liste de group dans le panel de création de l'utilisateur 
         private void add_user_listbox_group_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Get the currently selected item in the ListBox.
+            // Retourne l'item selectionné
             label_group = this.add_user_listbox_group.SelectedItem.ToString();
 
-            // Find the string in ListBox2.
+            // retourne un indice si la chaine selectionné exist
             int index = this.add_user_listbox_group.FindString(label_group);
             // If the item was not found in ListBox 2 display a message box, otherwise select it in ListBox2.
             if (index == -1)
-                MessageBox.Show("Item is not available in ListBox2");
+                MessageBox.Show("Rien n'a été selectionné dans cette liste");
             else
                 MessageBox.Show(label_group);
         }
 
+        //Methode initialisant le dataGridView pour les stock
         private void SetupDataGridViewStock()
         {
             gridViewStock.ColumnCount = 5;
@@ -210,6 +223,7 @@ namespace Logiciel.cs.View
             gridViewStock.CellClick += new DataGridViewCellEventHandler(gridViewStock_CellClick);
         }
 
+        //Methode appellant le model Product pour remplir le dataGridView
         public void FillDataGridViewStock()
         {
             Products products = new Products();
@@ -226,15 +240,12 @@ namespace Logiciel.cs.View
             gridViewStock.Columns[4].DisplayIndex = 4;
         }
 
+        //Methode de listener sur les certainnes column du datagridview
         private void gridViewStock_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Products products;
-            //MessageBox.Show(e.ColumnIndex.ToString());
             switch (e.ColumnIndex)
             {
-                case 5:
-                    //checkbox
-                    break;
                 case 7:
                     //edit
                     products = new Products();
@@ -269,6 +280,7 @@ namespace Logiciel.cs.View
             }
         }
 
+        //Methode initialisant le dataGridView pour les utilisateurs
         private void SetupDataGridViewUsers()
         {
             gridViewUsers.ColumnCount = 5;
@@ -326,6 +338,7 @@ namespace Logiciel.cs.View
             gridViewUsers.CellClick += new DataGridViewCellEventHandler(gridViewUser_CellClick);
         }
 
+        //Methode appellant le model User pour remplir le dataGridView
         public void FillDataGridViewUsers()
         {
             Users users = new Users();
@@ -342,15 +355,13 @@ namespace Logiciel.cs.View
             gridViewUsers.Columns[4].DisplayIndex = 4;
         }
 
+        //Methode de listener sur le click de certaines column du datagridview
         private void gridViewUser_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Users users = new Users();
             
             switch (e.ColumnIndex)
             {
-                case 4:
-                    //checkbox
-                    break;
                 case 5:
                     //edit
                     users = users.getUser(Int32.Parse(this.gridViewUsers.SelectedCells[0].Value.ToString()));
@@ -373,6 +384,7 @@ namespace Logiciel.cs.View
             }
         }
 
+        //Methode affichant le panel de creation user et affichant liste des groupes 
         private void btn_create_user_Click(object sender, EventArgs e)
         {
             EventHandler<EventArgs> requestFillGroup = loadGroupRequest;
@@ -402,6 +414,7 @@ namespace Logiciel.cs.View
             this.panel_preorder.Visible = false;
         }
 
+        ////Methode affichant le panel de creation d'un produit et affichant liste des categories de produits 
         private void btn_create_product_Click(object sender, EventArgs e)
         {
             InterfaceDeDonnees inter = new InterfaceDeDonnees();
@@ -426,14 +439,14 @@ namespace Logiciel.cs.View
             this.panel_preorder.Visible = false;
         }
 
+        //Methode appelant le model pour la creation des produits en fonction de la saisie
         private void btn_create_stock_Click(object sender, EventArgs e)
         {
             List<int> ids_category = new List<int>();
             Products product = new Products();
             foreach (var value in this.checked_list_box_create_stock.CheckedItems)
             {
-                var category = (Category)value;
-                MessageBox.Show(category.id_category + " | " + category.category_name);
+                Category category = (Category)value;
                 ids_category.Add(category.id_category);
             }
             product.name = this.input_create_stock_name.Text;
@@ -444,16 +457,13 @@ namespace Logiciel.cs.View
             product.createProduct(product, ids_category);
         }
 
+        //Methode permettant de remplir le panier pour les commandes
         private void btn_stock_preorder_Click(object sender, EventArgs e)
         {
             int id_preoder = 0;
             InterfaceDeDonnees inter = new InterfaceDeDonnees();
 
             id_preoder = inter.createPreOrder(userGlobal);
-
-            //MessageBox.Show(this.gridViewStock.Rows[1].Cells[4].Value.ToString());
-
-
 
             foreach (DataGridViewRow dataGridRow in this.gridViewStock.Rows)
             {
@@ -465,7 +475,7 @@ namespace Logiciel.cs.View
                     product.name = dataGridRow.Cells[2].Value.ToString();
                     product.quantity = Int32.Parse(dataGridRow.Cells[3].Value.ToString());
                     listCart.Add(product);
-                    MessageBox.Show(product.name);
+                    //MessageBox.Show(product.name);
                     listQuantityToCommand.Add(dataGridRow.Cells[6].Value.ToString());
                     inter.createPreOrderToProduct(id_preoder, product.id_products, Int32.Parse(dataGridRow.Cells[6].Value.ToString()));
                 }
@@ -483,6 +493,7 @@ namespace Logiciel.cs.View
             
         }
 
+        //Methode affichant le panel Panier
         private void btn_panier_Click(object sender, EventArgs e)
         {
             this.panel_preorder.Visible = true;
@@ -494,6 +505,7 @@ namespace Logiciel.cs.View
             FillDataGridViewCart();
         }
 
+        //Methode d'initialisation du dataGridView panier
         private void SetupDataGridViewCart()
         {
             gridViewCart.ColumnCount = 4;
@@ -541,6 +553,7 @@ namespace Logiciel.cs.View
             gridViewCart.CellClick += new DataGridViewCellEventHandler(gridViewCart_CellClick);
         }
 
+        //Methode remplissant le datagridview panier par rapport à la liste de checkbox 
         public void FillDataGridViewCart()
         {
             Products product = new Products();
@@ -558,6 +571,7 @@ namespace Logiciel.cs.View
             gridViewCart.Columns[3].DisplayIndex = 3;
         }
 
+        //Methode de listener sur certaine column du datagridView panier
         private void gridViewCart_CellClick(object sender, DataGridViewCellEventArgs e)
         {
            

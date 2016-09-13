@@ -8,6 +8,7 @@ namespace Logiciel.cs.Model
 {
     public class Users : IUsers
     {
+        //Attribut du user basé sur la BDD
         public int id_users { get; set; }
         public string users_email { get; set; }
         public string users_password { get; set; }
@@ -23,11 +24,13 @@ namespace Logiciel.cs.Model
         public DateTime users_deletedAt { get; set; }
         public List<IUsers> listUsers = new List<IUsers>(); 
         
+        //Constructeur instanciant l'interface de donné (requete vers la BDD)
         public Users()
         {
            inter  = new InterfaceDeDonnees();
         }
 
+        //Methode verifiant si l'utilisateur existe dans la base
         public Users verifUser(string email, string password)
         {
             Users U = new Users();
@@ -55,16 +58,19 @@ namespace Logiciel.cs.Model
             return U;
         }
 
+        //methode appellant l'interface de donné pour créer un nouvel user
         public int createUser(Users user)
         {
             return inter.createUser(user);
         }
 
+        //methode appellant l'interface de donné pour supprime un nouvel user
         public int deleteUser(string id)
         {
             return inter.deleteUser(id);
         }
 
+        //methode listant tous les utilisateurs pour datagridview
         public List<IUsers> getListUsers()
         {
             inter.ListerTable();
@@ -72,6 +78,7 @@ namespace Logiciel.cs.Model
             return listUsers;
         }
 
+        //Methode retournant le user en fonction de son ID
         public Users getUser(int id)
         {
             Users user = new Users();

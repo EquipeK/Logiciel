@@ -11,5 +11,4 @@ namespace Logiciel.cs.Model
         public int id_droits { get; set; }
         public string droits_level { get; set; }
     }
-
 }

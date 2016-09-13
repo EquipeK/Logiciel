@@ -9,15 +9,20 @@ namespace Logiciel.cs.Model
 {
     public class Groups : IGroups
     {
+        //Attribut du group basé sur la BDD
         public int id_groups { get; set; }
         public int groups_level { get; set; }
         public string groups_label { get; set; }
         private InterfaceDeDonnees inter;
         private List<IGroups> listGroup = new List<IGroups>();
+
+        //Contrsucteur par defaut 
         public Groups()
         {
 
         }
+
+        //Constructeur instanciant l'interface de donné (requete vers la BDD) et recuperant les group de droit 
         public Groups(string label){
             inter = new InterfaceDeDonnees();
             inter.ListerTable();

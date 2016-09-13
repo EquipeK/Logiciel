@@ -12,7 +12,10 @@ namespace Logiciel.cs.View
 {
     public partial class Login : Form, ILogin
     {
+        //Attribut listener connexion
         public event EventHandler<EventArgs> request;
+
+        //Attribut login 
         private string email;
 
         public string Email
@@ -32,6 +35,7 @@ namespace Logiciel.cs.View
             InitializeComponent();
         }
 
+        //Methode connexion
         private void click_connexion(object sender, EventArgs e)
         {
             EventHandler<EventArgs> request_connexion = request;

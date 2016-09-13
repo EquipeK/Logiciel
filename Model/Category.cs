@@ -8,6 +8,7 @@ namespace Logiciel.cs.Model
 {
     class Category : ICategory
     {
+        //Attribut d'une category basé sur la BDD
         public int id_category { get; set; }
         public string category_name { get; set; }
         public int id_parent { get; set; }
@@ -16,12 +17,14 @@ namespace Logiciel.cs.Model
         private InterfaceDeDonnees inter;
         private List<ICategory> listCategory = new List<ICategory>();
 
+        //Contructeur qui instancie l'interface de donné pour remplir la list des catégories issus de la BDD
         public Category()
         {
             inter = new InterfaceDeDonnees();
             inter.ListerTable();
         }
 
+        //Methode retournant la liste des categories
         public List<ICategory> getListProduct()
         {
             listCategory = inter.Categories;

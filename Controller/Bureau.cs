@@ -13,21 +13,12 @@ namespace Logiciel.cs.Controller
         private string login;
         private string group;
         public string loginBureau { get; set; }
-        public string Group
-        {
-            get
-            {
-                return group;
-            }
-
-            set
-            {
-                group = value;
-            }
-        }
+        public string Group {get; set;}
         private Users user;
         Logiciel.cs.View.Bureau viewBureau = null;
         cs.Model.Groups modelGroup = null;
+
+        //Constructeur affichant la fenetre de gestion de stok après identification
         public Bureau(Users user)
         {
             this.user = user;
@@ -35,7 +26,6 @@ namespace Logiciel.cs.Controller
             this.group = user.users_group_label;
             viewBureau = new View.Bureau(user);
             login = loginBureau;
-            viewBureau.requestDisplayUsers += onRequestDisplayUsers;
             viewBureau.requestCloseSession += onRequestCloseSession;
             viewBureau.loadGroupRequest += onRequestFillGroup;
             viewBureau.ShowDialog();
@@ -43,22 +33,22 @@ namespace Logiciel.cs.Controller
             //rjouter un event sur le label
         }
 
+        //Evenement récuperant le groupe de l'utilisateur après conneexion
         private void onRequestFillGroup(object sender, EventArgs e)
         {
             this.getGroup();
         }
 
+        //Evement fermant la session de l'utilisateur
         private void onRequestCloseSession(object sender, EventArgs e)
         {
             viewBureau.Hide();
+            viewBureau = null;
             View.Login viewLogin = new View.Login();
             viewLogin.ShowDialog();
         }
 
-        public void onRequestDisplayUsers(object sender, EventArgs e)
-        {
-            //MessageBox.Show("Panel Users");   
-        }
+        //Methode retournant le group de l'utilistaeur en fonction de ses identidfiants
         public void getGroup()
         {
             modelGroup = new cs.Model.Groups("");
