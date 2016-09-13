@@ -1,0 +1,769 @@
+[1mdiff --git a/Controller/Bureau.cs b/Controller/Bureau.cs[m
+[1mindex 4c857bc..39c5edf 100644[m
+[1m--- a/Controller/Bureau.cs[m
+[1m+++ b/Controller/Bureau.cs[m
+[36m@@ -13,21 +13,12 @@[m [mnamespace Logiciel.cs.Controller[m
+        private string login;[m
+        private string group;[m
+        public string loginBureau { get; set; }[m
+        public string Group [31m[-{-][m
+[31m[-            get-][m
+[31m[-            {-][m
+[31m[-                return group;-][m
+[31m[-            }-][m
+
+[31m[-            set-][m
+[31m[-            {-][m
+[31m[-                group = value;-][m
+[31m[-            }-][m
+[31m[-        }-][m[32m{+{get; set;}+}[m
+        private Users user;[m
+        Logiciel.cs.View.Bureau viewBureau = null;[m
+        cs.Model.Groups modelGroup = null;[m
+
+        [32m{+//Constructeur affichant la fenetre de gestion de stok après identification+}[m
+        public Bureau(Users user)[m
+        {[m
+            this.user = user;[m
+[36m@@ -35,7 +26,6 @@[m [mnamespace Logiciel.cs.Controller[m
+            this.group = user.users_group_label;[m
+            viewBureau = new View.Bureau(user);[m
+            login = loginBureau;[m
+[31m[-            viewBureau.requestDisplayUsers += onRequestDisplayUsers;-][m
+            viewBureau.requestCloseSession += onRequestCloseSession;[m
+            viewBureau.loadGroupRequest += onRequestFillGroup;[m
+            viewBureau.ShowDialog();[m
+[36m@@ -43,22 +33,22 @@[m [mnamespace Logiciel.cs.Controller[m
+            //rjouter un event sur le label[m
+        }[m
+
+        [32m{+//Evenement récuperant le groupe de l'utilisateur après conneexion+}[m
+        private void onRequestFillGroup(object sender, EventArgs e)[m
+        {[m
+            this.getGroup();[m
+        }[m
+
+        [32m{+//Evement fermant la session de l'utilisateur+}[m
+        private void onRequestCloseSession(object sender, EventArgs e)[m
+        {[m
+            viewBureau.Hide();[m
+            [32m{+viewBureau = null;+}[m
+            View.Login viewLogin = new View.Login();[m
+            viewLogin.ShowDialog();[m
+        }[m
+
+        [31m[-public void onRequestDisplayUsers(object sender, EventArgs e)-][m
+[31m[-        {-][m
+[31m[-            //MessageBox.Show("Panel Users");   -][m
+[31m[-        }-][m[32m{+//Methode retournant le group de l'utilistaeur en fonction de ses identidfiants+}[m
+        public void getGroup()[m
+        {[m
+            modelGroup = new cs.Model.Groups("");[m
+[1mdiff --git a/Controller/Login.cs b/Controller/Login.cs[m
+[1mindex fc1ea9a..fbf37c4 100755[m
+[1m--- a/Controller/Login.cs[m
+[1m+++ b/Controller/Login.cs[m
+[36m@@ -11,6 +11,7 @@[m [mnamespace Logiciel.cs.Controller[m
+{[m
+    class Login[m
+    {[m
+        [32m{+//Attribut pour la fenetre de connexion+}[m
+        private string email;[m
+        public string Email[m
+        {[m
+[36m@@ -26,12 +27,16 @@[m [mnamespace Logiciel.cs.Controller[m
+        }[m
+        Logiciel.cs.View.Login viewLogin = new Logiciel.cs.View.Login();[m
+        cs.Model.Users gestUser = null;[m
+
+        [32m{+//Contructeur affichant la fenetre de connexion au demarrage du logiciel+}[m
+        public Login()[m
+        {[m
+            viewLogin.request += onRequest;[m
+            viewLogin.ShowDialog();[m
+            [m
+        }[m
+
+        [32m{+//Methode envoyant les idenfiants de l'utilisateur au model pour vérifié si celui-ci existe+}[m
+        public void verifierLogin(string email, string password)[m
+        {[m
+            gestUser = new cs.Model.Users();[m
+[36m@@ -44,6 +49,7 @@[m [mnamespace Logiciel.cs.Controller[m
+            }[m
+        }[m
+
+        [32m{+//Evenement sur le bouton de connexion qui recupere les identifiants+}[m
+        public void onRequest(object sender, EventArgs e)[m
+        {[m
+            Email = viewLogin.Email;[m
+[1mdiff --git a/Model/Category.cs b/Model/Category.cs[m
+[1mindex 7082d15..fcc6fc0 100644[m
+[1m--- a/Model/Category.cs[m
+[1m+++ b/Model/Category.cs[m
+[36m@@ -8,6 +8,7 @@[m [mnamespace Logiciel.cs.Model[m
+{[m
+    class Category : ICategory[m
+    {[m
+        [32m{+//Attribut d'une category basé sur la BDD+}[m
+        public int id_category { get; set; }[m
+        public string category_name { get; set; }[m
+        public int id_parent { get; set; }[m
+[36m@@ -16,12 +17,14 @@[m [mnamespace Logiciel.cs.Model[m
+        private InterfaceDeDonnees inter;[m
+        private List<ICategory> listCategory = new List<ICategory>();[m
+
+        [32m{+//Contructeur qui instancie l'interface de donné pour remplir la list des catégories issus de la BDD+}[m
+        public Category()[m
+        {[m
+            inter = new InterfaceDeDonnees();[m
+            inter.ListerTable();[m
+        }[m
+
+        [32m{+//Methode retournant la liste des categories+}[m
+        public List<ICategory> getListProduct()[m
+        {[m
+            listCategory = inter.Categories;[m
+[1mdiff --git a/Model/Groups.cs b/Model/Groups.cs[m
+[1mindex ea8852a..c12bbed 100644[m
+[1m--- a/Model/Groups.cs[m
+[1m+++ b/Model/Groups.cs[m
+[36m@@ -9,15 +9,20 @@[m [mnamespace Logiciel.cs.Model[m
+{[m
+    public class Groups : IGroups[m
+    {[m
+        [32m{+//Attribut du group basé sur la BDD+}[m
+        public int id_groups { get; set; }[m
+        public int groups_level { get; set; }[m
+        public string groups_label { get; set; }[m
+        private InterfaceDeDonnees inter;[m
+        private List<IGroups> listGroup = new List<IGroups>();[m
+
+        [32m{+//Contrsucteur par defaut+}[m 
+        public Groups()[m
+        {[m
+
+        }[m
+
+        [32m{+//Constructeur instanciant l'interface de donné (requete vers la BDD) et recuperant les group de droit+}[m 
+        public Groups(string label){[m
+            inter = new InterfaceDeDonnees();[m
+            inter.ListerTable();[m
+[1mdiff --git a/Model/InterfaceDeDonnees.cs b/Model/InterfaceDeDonnees.cs[m
+[1mindex 4cfa04e..d511c67 100755[m
+[1m--- a/Model/InterfaceDeDonnees.cs[m
+[1m+++ b/Model/InterfaceDeDonnees.cs[m
+[36m@@ -24,6 +24,7 @@[m [mnamespace Logiciel.cs.Model[m
+        public List<ICategory> Categories { get { return getCategories(); } }[m
+        /* Constrcuteur */[m
+[m
+        [32m{+//Constructeur initialisant la connexion à la BDD+}[m
+        public InterfaceDeDonnees()[m
+        {[m
+            //bddName = ConfigurationManager.ConnectionStrings[0].Name;[m
+[36m@@ -31,21 +32,24 @@[m [mnamespace Logiciel.cs.Model[m
+            logicielConnexion = new MySqlConnection(connexion);[m
+        }[m
+[m
+        [32m{+//Methode appellant le Controller login+}[m
+        public void runApp()[m
+        {[m
+            cs.Controller.Login log = new cs.Controller.Login();[m
+        }[m
+[m
+        [32m{+//Methode ouvrant la connexion à la BDD+}[m
+        public void openConnection()[m
+        {[m
+            logicielConnexion.Open();[m
+        }[m
+[m
+        [32m{+//Methode remplissant les dataTables issus de la BDD+}[m
+        public void ListerTable()[m
+        {[m
+            try[m
+            {[m
+                [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+[m
+                try[m
+                {[m
+[36m@@ -71,7 +75,6 @@[m [mnamespace Logiciel.cs.Model[m
+                    daCategories.Fill(dsStock, "categories");[m
+                    tCategory = dsStock.Tables["categories"];[m
+                    [m
+[31m[-                    closeConnection();-][m
+                }[m
+                catch (MySqlException e)[m
+                {[m
+[36m@@ -92,7 +95,7 @@[m [mnamespace Logiciel.cs.Model[m
+            }[m
+        }[m
+[m
+        [32m{+//Methode remplissant la liste utilisateur via le dataTable+}[m
+        public List<IUsers> getUsers()[m
+        {[m
+            List<IUsers> userList = new List<IUsers>();[m
+[36m@@ -114,6 +117,7 @@[m [mnamespace Logiciel.cs.Model[m
+            return userList;[m
+        }[m
+[m
+        [32m{+//Methode remplissant la liste des groups de droit via le dataTable+}[m
+        public List<IGroups> getGroups()[m
+        {[m
+            List<IGroups> groupList = new List<IGroups>();[m
+[36m@@ -129,6 +133,7 @@[m [mnamespace Logiciel.cs.Model[m
+            return groupList;[m
+        }[m
+[m
+        [32m{+//Methode remplissant la liste des produits via le dataTable+}[m
+        public List<IProducts> getProducts()[m
+        {[m
+            List<IProducts> productList = new List<IProducts>();[m
+[36m@@ -149,7 +154,7 @@[m [mnamespace Logiciel.cs.Model[m
+            return productList;[m
+        }[m
+[m
+        [32m{+//Methode remplissant la liste des categories via le dataTable+}[m
+        public List<ICategory> getCategories()[m
+        {[m
+            List<ICategory> categoryList = new List<ICategory>();[m
+[36m@@ -167,11 +172,13 @@[m [mnamespace Logiciel.cs.Model[m
+            return categoryList;[m
+        }[m
+[m
+        [32m{+//ethode fermant la connexion à la base+}[m
+        public void closeConnection()[m
+        {[m
+            logicielConnexion.Close();[m
+        }[m
+[m
+        [32m{+//Methode de creation utilisateur dans la BDD+}[m
+        public int createUser(Users user)[m
+        {[m
+            int retour = 0;[m
+[36m@@ -179,7 +186,7 @@[m [mnamespace Logiciel.cs.Model[m
+            Groups grp = new Groups();[m
+            try[m
+            {[m
+                [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+                try[m
+                {[m
+                    string requete = "INSERT INTO user (firstname, lastname, email, password, created_at, id_group, signature) VALUES (?firstname,?lastname,?email, ?password, ?created_at, ?id_group, ?signature)";[m
+[36m@@ -209,7 +216,7 @@[m [mnamespace Logiciel.cs.Model[m
+            }[m
+            finally[m
+            {[m
+                [31m[-logicielConnexion.Close();-][m[32m{+closeConnection();+}[m
+            }[m
+            [m
+            //daGroups.InsertCommand.Parameters.AddWithValue("@id_group", id_group);[m
+[36m@@ -218,13 +225,14 @@[m [mnamespace Logiciel.cs.Model[m
+            return retour;[m
+        }[m
+[m
+        [32m{+//Methode "supprimant" un utilisateur de la BDD+}[m
+        public int deleteUser(string id)[m
+        {[m
+            int retour = 0;[m
+            DateTime deleted = DateTime.Now;[m
+            try[m
+            {[m
+                [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+                try[m
+                {[m
+                    string requete = "UPDATE user SET deleted_at=@deleted WHERE id_user=@id";[m
+[36m@@ -247,18 +255,19 @@[m [mnamespace Logiciel.cs.Model[m
+            }[m
+            finally[m
+            {[m
+                [31m[-logicielConnexion.Close();-][m[32m{+closeConnection();+}[m
+            }[m
+            return retour;[m
+        }[m
+[m
+        [32m{+//Methode de création d'un produit dans la BDD avec les categories appartennant+}[m
+        public int createProduct(Products product, List<int> ids_category)[m
+        {[m
+            int retour = 0;[m
+            DateTime created_at = DateTime.Now;[m
+            try[m
+            {[m
+                [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+                try[m
+                {[m
+                    [m
+[36m@@ -281,11 +290,10 @@[m [mnamespace Logiciel.cs.Model[m
+                    command.Parameters.AddWithValue("?description1", product.description1);[m
+                    command.Parameters.AddWithValue("?description2", product.description2);[m
+                    retour = command.ExecuteNonQuery();[m
+                    [31m[-logicielConnexion.Close();-][m[32m{+closeConnection();+}[m
+                    ListerTable();[m
+                    [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+                    [m
+[31m[-                    MessageBox.Show("last element "+ idToIncr.ToString());-][m
+                    foreach (int id_cat in ids_category)[m
+                    {[m
+                        requete = "INSERT INTO product_has_category (product_id_product, category_id_category)" +[m
+[36m@@ -311,18 +319,19 @@[m [mnamespace Logiciel.cs.Model[m
+            }[m
+            finally[m
+            {[m
+                [31m[-logicielConnexion.Close();-][m[32m{+closeConnection();+}[m
+            }[m
+            return retour;[m
+        }[m
+[m
+        [32m{+//Methode "supprimant" un produit dans la BDD+}[m
+        public int deleteProduct(string id)[m
+        {[m
+            int retour = 0;[m
+            DateTime deleted = DateTime.Now; [m
+            try[m
+            {[m
+                [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+                try[m
+                {[m
+                    string requete = "UPDATE product SET deleted_at=@deleted WHERE id_product=@id";[m
+[36m@@ -345,11 +354,12 @@[m [mnamespace Logiciel.cs.Model[m
+            }[m
+            finally[m
+            {[m
+                [31m[-logicielConnexion.Close();-][m[32m{+closeConnection();+}[m
+            }[m
+            return retour;[m
+        }[m
+[m
+        [32m{+//Methode recuperant un produit et ses categories+}[m
+        public List<ICategory> getProductWithCategories(int id_product) {[m
+[m
+            MySqlCommand maCommand = new MySqlCommand();[m
+[36m@@ -368,6 +378,7 @@[m [mnamespace Logiciel.cs.Model[m
+            return listCategoriesWithProduct;[m
+        }[m
+[m
+        [32m{+//Methode de création d'un panier+}[m 
+        public int createPreOrder(Users user)[m
+        {[m
+            long retour = 0;[m
+[36m@@ -405,11 +416,12 @@[m [mnamespace Logiciel.cs.Model[m
+            return (int)retour;[m
+        }[m
+[m
+        [32m{+//methode de création d'un panier de produit+}[m
+        public void createPreOrderToProduct(int id_preorder, int id_product, int quantity)[m
+        {[m
+            try[m
+            {[m
+                [31m[-logicielConnexion.Open();-][m[32m{+openConnection();+}[m
+                try[m
+                {[m
+                    string requete = "INSERT INTO preorder_to_product (id_preorder,id_product,quantity) VALUES (?id_preorder,?id_product,?quantity);";[m
+[36m@@ -432,7 +444,7 @@[m [mnamespace Logiciel.cs.Model[m
+            }[m
+            finally[m
+            {[m
+                [31m[-logicielConnexion.Close();-][m[32m{+closeConnection();+}[m
+            }[m
+        }[m
+    }[m
+[1mdiff --git a/Model/Products.cs b/Model/Products.cs[m
+[1mindex c206ebc..04e5a39 100644[m
+[1m--- a/Model/Products.cs[m
+[1m+++ b/Model/Products.cs[m
+[36m@@ -8,6 +8,7 @@[m [mnamespace Logiciel.cs.Model[m
+{[m
+    class Products: IProducts[m
+    {[m
+        [32m{+//Attribut formant un produit basé sur la BDD+}[m
+        public int id_products { get; set; }[m
+        public string name { get; set; }[m
+        public int quantity { get; set; }[m
+[36m@@ -21,28 +22,35 @@[m [mnamespace Logiciel.cs.Model[m
+        public string description2 { get; set; }[m
+        private InterfaceDeDonnees inter;[m
+        private List<IProducts> listProducts = new List<IProducts>();[m
+
+        [32m{+//Constructeur instanciant l'interface de donné (requete vers la BDD) et remplissant la une list de produit+}[m
+        public Products()[m
+        {[m
+            inter = new InterfaceDeDonnees();[m
+            inter.ListerTable();[m
+        }[m
+
+        [32m{+//Methode appelant l'interface de donnée pour la création de produit et fixant le produit non visible sur le site vitrine+}[m
+        public int createProduct(Products product, List<int> ids_category)[m
+        {[m
+            product.online = false;[m
+            return inter.createProduct(product, ids_category);[m
+        }[m
+
+        [32m{+//Methode remplissant la list de produit+}[m
+        public List<IProducts> getListProduct()[m
+        {[m
+            listProducts = inter.Products;[m
+            return listProducts;[m
+        }[m
+
+        [32m{+//Methode appelant l'interface de donnée pour la suppression d'un produit+}[m
+        public int deleteProduct(string id)[m
+        {[m
+            return inter.deleteProduct(id);[m
+        }[m
+
+        [32m{+//Methode retournant un produit en fonction de son ID+}[m
+        public Products getProduct(int id_product)[m
+        {[m
+            Products product = new Products();[m
+[1mdiff --git a/Model/Structures.cs b/Model/Structures.cs[m
+[1mindex 18feec4..3d97e95 100755[m
+[1m--- a/Model/Structures.cs[m
+[1m+++ b/Model/Structures.cs[m
+[36m@@ -11,5 +11,4 @@[m [mnamespace Logiciel.cs.Model[m
+        public int id_droits { get; set; }[m
+        public string droits_level { get; set; }[m
+    }[m
+[31m[--][m
+}[m
+[1mdiff --git a/Model/Users.cs b/Model/Users.cs[m
+[1mindex 669eeac..30e0aae 100644[m
+[1m--- a/Model/Users.cs[m
+[1m+++ b/Model/Users.cs[m
+[36m@@ -8,6 +8,7 @@[m [mnamespace Logiciel.cs.Model[m
+{[m
+    public class Users : IUsers[m
+    {[m
+        [32m{+//Attribut du user basé sur la BDD+}[m
+        public int id_users { get; set; }[m
+        public string users_email { get; set; }[m
+        public string users_password { get; set; }[m
+[36m@@ -23,11 +24,13 @@[m [mnamespace Logiciel.cs.Model[m
+        public DateTime users_deletedAt { get; set; }[m
+        public List<IUsers> listUsers = new List<IUsers>(); [m
+        [m
+        [32m{+//Constructeur instanciant l'interface de donné (requete vers la BDD)+}[m
+        public Users()[m
+        {[m
+           inter  = new InterfaceDeDonnees();[m
+        }[m
+
+        [32m{+//Methode verifiant si l'utilisateur existe dans la base+}[m
+        public Users verifUser(string email, string password)[m
+        {[m
+            Users U = new Users();[m
+[36m@@ -55,16 +58,19 @@[m [mnamespace Logiciel.cs.Model[m
+            return U;[m
+        }[m
+
+        [32m{+//methode appellant l'interface de donné pour créer un nouvel user+}[m
+        public int createUser(Users user)[m
+        {[m
+            return inter.createUser(user);[m
+        }[m
+
+        [32m{+//methode appellant l'interface de donné pour supprime un nouvel user+}[m
+        public int deleteUser(string id)[m
+        {[m
+            return inter.deleteUser(id);[m
+        }[m
+
+        [32m{+//methode listant tous les utilisateurs pour datagridview+}[m
+        public List<IUsers> getListUsers()[m
+        {[m
+            inter.ListerTable();[m
+[36m@@ -72,6 +78,7 @@[m [mnamespace Logiciel.cs.Model[m
+            return listUsers;[m
+        }[m
+
+        [32m{+//Methode retournant le user en fonction de son ID+}[m
+        public Users getUser(int id)[m
+        {[m
+            Users user = new Users();[m
+[1mdiff --git a/View/Bureau.cs b/View/Bureau.cs[m
+[1mindex d8b4a86..aa22d47 100644[m
+[1m--- a/View/Bureau.cs[m
+[1m+++ b/View/Bureau.cs[m
+[36m@@ -13,13 +13,19 @@[m [mnamespace Logiciel.cs.View[m
+{[m
+    public partial class Bureau : Form[m
+    {[m
+        [31m[-public-][m[32m{+private+}[m string label { get; set; }[31m[-public event EventHandler<EventArgs> loadGroupRequest;-][m
+[31m[-        public List<IGroups> listGroup = new List<IGroups>();-][m
+        private string label_group;[m
+        [32m{+private List<IGroups> listGroup = new List<IGroups>();+}[m
+        private List<IProducts> listCart = new List<IProducts>();[m
+        private List<string> listQuantityToCommand = new List<string>();[m
+        private Users userGlobal = new Users();[m
+
+        [32m{+//Event Listener +}[m
+[32m{+        public event EventHandler<EventArgs> requestCloseSession;+}[m
+[32m{+        public event EventHandler<EventArgs> loadGroupRequest;+}[m
+[32m{+        public event EventHandler<EventArgs> requestDisplayUsers;+}[m
+
+[32m{+        //Contructeur surchargé+}[m
+        public Bureau(Users users)[m
+        {[m
+            userGlobal = users;[m
+[36m@@ -31,20 +37,19 @@[m [mnamespace Logiciel.cs.View[m
+            this.label_signature2.Text = users.users_signature;[m
+            this.panel_parent.Visible = true;[m
+            this.panel_stock.Visible = false;[m
+            this.panelUsers.Visible = [31m[-true;-][m[32m{+false;+}[m
+            this.panel_add_user.Visible = false;[m
+            this.panel_list_users.Visible = [31m[-false;-][m[32m{+true;+}[m
+            this.panel_preorder.Visible = false;[m
+        }[m
+        
+        [32m{+//Contructeur permettant initialisé le group de l'utilisateur+}[m
+        public Bureau(List<IGroups> ListGroup)[m
+        {[m
+
+            this.listGroup = ListGroup;[m
+
+
+        }[m
+
+        [31m[-public event EventHandler<EventArgs> requestDisplayUsers;-][m
+[31m[-        public event EventHandler<EventArgs> requestCloseSession;-][m[32m{+//Methode affichant l'entete+}[m 
+        private void displayUsers(object sender, EventArgs e)[m
+        {[m
+            EventHandler<EventArgs> requestSendCtrl = requestDisplayUsers;[m
+[36m@@ -54,6 +59,7 @@[m [mnamespace Logiciel.cs.View[m
+            }[m
+        }[m
+
+        [32m{+//Methode de deconnexion+}[m
+        private void deconnexion(object sender, EventArgs e)[m
+        {[m
+            EventHandler<EventArgs> requestCloseSendCtrl = requestCloseSession;[m
+[36m@@ -63,6 +69,7 @@[m [mnamespace Logiciel.cs.View[m
+            }[m
+        }[m
+
+        [32m{+//Methode affichant le profil de l'utilisateur+}[m 
+        private void btn_profil_Click(object sender, EventArgs e)[m
+        {[m
+            this.panel_stock.Visible = false;[m
+[36m@@ -72,6 +79,7 @@[m [mnamespace Logiciel.cs.View[m
+            this.panel_preorder.Visible = false;[m
+        }[m
+
+        [32m{+//Methode affichant le panel des stock+}[m
+        private void btn_stock_Click(object sender, EventArgs e)[m
+        {[m
+            this.panel_stock.Visible = true;[m
+[36m@@ -86,6 +94,7 @@[m [mnamespace Logiciel.cs.View[m
+
+        }[m
+
+        [32m{+//Methode affichant le panel qui liste les utilisateurs+}[m
+        private void btn_list_user_Click(object sender, EventArgs e)[m
+        {[m
+            this.panel_stock.Visible = false;[m
+[36m@@ -98,6 +107,7 @@[m [mnamespace Logiciel.cs.View[m
+            FillDataGridViewUsers();[m
+        }[m
+
+        [32m{+//Methode envoyer les données saisis au model User pour créer un utilisateur+}[m
+        private void add_user_btn_create_Click(object sender, EventArgs e)[m
+        {[m
+
+[36m@@ -119,6 +129,7 @@[m [mnamespace Logiciel.cs.View[m
+            }[m
+        }[m
+
+        [32m{+//Methode reinitialisant les champs du panel de création utilisateur après enregistrement+}[m
+        private void init_input_create_user()[m
+        {[m
+            this.add_user_input_prenom.Text = "";[m
+[36m@@ -127,20 +138,22 @@[m [mnamespace Logiciel.cs.View[m
+            this.add_user_input_password.Text = "";[m
+        }[m
+
+        [32m{+//Methode remplissant la liste de group dans le panel de création de l'utilisateur+}[m 
+        private void add_user_listbox_group_SelectedIndexChanged(object sender, EventArgs e)[m
+        {[m
+            // [31m[-Get the currently selected item in the ListBox.-][m[32m{+Retourne l'item selectionné+}[m
+            label_group = this.add_user_listbox_group.SelectedItem.ToString();[m
+
+            // [31m[-Find the string in ListBox2.-][m[32m{+retourne un indice si la chaine selectionné exist+}[m
+            int index = this.add_user_listbox_group.FindString(label_group);[m
+            // If the item was not found in ListBox 2 display a message box, otherwise select it in ListBox2.[m
+            if (index == -1)[m
+                [31m[-MessageBox.Show("Item is not available in ListBox2");-][m[32m{+MessageBox.Show("Rien n'a été selectionné dans cette liste");+}[m
+            else[m
+                MessageBox.Show(label_group);[m
+        }[m
+
+        [32m{+//Methode initialisant le dataGridView pour les stock+}[m
+        private void SetupDataGridViewStock()[m
+        {[m
+            gridViewStock.ColumnCount = 5;[m
+[36m@@ -210,6 +223,7 @@[m [mnamespace Logiciel.cs.View[m
+            gridViewStock.CellClick += new DataGridViewCellEventHandler(gridViewStock_CellClick);[m
+        }[m
+
+        [32m{+//Methode appellant le model Product pour remplir le dataGridView+}[m
+        public void FillDataGridViewStock()[m
+        {[m
+            Products products = new Products();[m
+[36m@@ -226,15 +240,12 @@[m [mnamespace Logiciel.cs.View[m
+            gridViewStock.Columns[4].DisplayIndex = 4;[m
+        }[m
+
+        [32m{+//Methode de listener sur les certainnes column du datagridview+}[m
+        private void gridViewStock_CellClick(object sender, DataGridViewCellEventArgs e)[m
+        {[m
+            Products products;[m
+[31m[-            //MessageBox.Show(e.ColumnIndex.ToString());-][m
+            switch (e.ColumnIndex)[m
+            {[m
+[31m[-                case 5:-][m
+[31m[-                    //checkbox-][m
+[31m[-                    break;-][m
+                case 7:[m
+                    //edit[m
+                    products = new Products();[m
+[36m@@ -269,6 +280,7 @@[m [mnamespace Logiciel.cs.View[m
+            }[m
+        }[m
+
+        [32m{+//Methode initialisant le dataGridView pour les utilisateurs+}[m
+        private void SetupDataGridViewUsers()[m
+        {[m
+            gridViewUsers.ColumnCount = 5;[m
+[36m@@ -326,6 +338,7 @@[m [mnamespace Logiciel.cs.View[m
+            gridViewUsers.CellClick += new DataGridViewCellEventHandler(gridViewUser_CellClick);[m
+        }[m
+
+        [32m{+//Methode appellant le model User pour remplir le dataGridView+}[m
+        public void FillDataGridViewUsers()[m
+        {[m
+            Users users = new Users();[m
+[36m@@ -342,15 +355,13 @@[m [mnamespace Logiciel.cs.View[m
+            gridViewUsers.Columns[4].DisplayIndex = 4;[m
+        }[m
+
+        [32m{+//Methode de listener sur le click de certaines column du datagridview+}[m
+        private void gridViewUser_CellClick(object sender, DataGridViewCellEventArgs e)[m
+        {[m
+            Users users = new Users();[m
+            [m
+            switch (e.ColumnIndex)[m
+            {[m
+[31m[-                case 4:-][m
+[31m[-                    //checkbox-][m
+[31m[-                    break;-][m
+                case 5:[m
+                    //edit[m
+                    users = users.getUser(Int32.Parse(this.gridViewUsers.SelectedCells[0].Value.ToString()));[m
+[36m@@ -373,6 +384,7 @@[m [mnamespace Logiciel.cs.View[m
+            }[m
+        }[m
+
+        [32m{+//Methode affichant le panel de creation user et affichant liste des groupes+}[m 
+        private void btn_create_user_Click(object sender, EventArgs e)[m
+        {[m
+            EventHandler<EventArgs> requestFillGroup = loadGroupRequest;[m
+[36m@@ -402,6 +414,7 @@[m [mnamespace Logiciel.cs.View[m
+            this.panel_preorder.Visible = false;[m
+        }[m
+
+        [32m{+////Methode affichant le panel de creation d'un produit et affichant liste des categories de produits+}[m 
+        private void btn_create_product_Click(object sender, EventArgs e)[m
+        {[m
+            InterfaceDeDonnees inter = new InterfaceDeDonnees();[m
+[36m@@ -426,14 +439,14 @@[m [mnamespace Logiciel.cs.View[m
+            this.panel_preorder.Visible = false;[m
+        }[m
+
+        [32m{+//Methode appelant le model pour la creation des produits en fonction de la saisie+}[m
+        private void btn_create_stock_Click(object sender, EventArgs e)[m
+        {[m
+            List<int> ids_category = new List<int>();[m
+            Products product = new Products();[m
+            foreach (var value in this.checked_list_box_create_stock.CheckedItems)[m
+            {[m
+                [31m[-var-][m[32m{+Category+}[m category = (Category)value;[31m[-MessageBox.Show(category.id_category + " | " + category.category_name);-][m
+                ids_category.Add(category.id_category);[m
+            }[m
+            product.name = this.input_create_stock_name.Text;[m
+[36m@@ -444,6 +457,7 @@[m [mnamespace Logiciel.cs.View[m
+            product.createProduct(product, ids_category);[m
+        }[m
+
+        [32m{+//Methode permettant de remplir le panier pour les commandes+}[m
+        private void btn_stock_preorder_Click(object sender, EventArgs e)[m
+        {[m
+            int id_preoder = 0;[m
+[36m@@ -451,10 +465,6 @@[m [mnamespace Logiciel.cs.View[m
+
+            id_preoder = inter.createPreOrder(userGlobal);[m
+
+[31m[-            //MessageBox.Show(this.gridViewStock.Rows[1].Cells[4].Value.ToString());-][m
+
+
+
+            foreach (DataGridViewRow dataGridRow in this.gridViewStock.Rows)[m
+            {[m
+                if (dataGridRow.Cells["command"].Value != null && (bool)dataGridRow.Cells["command"].Value)[m
+[36m@@ -465,7 +475,7 @@[m [mnamespace Logiciel.cs.View[m
+                    product.name = dataGridRow.Cells[2].Value.ToString();[m
+                    product.quantity = Int32.Parse(dataGridRow.Cells[3].Value.ToString());[m
+                    listCart.Add(product);[m
+                    [31m[-MessageBox.Show(product.name);-][m[32m{+//MessageBox.Show(product.name);+}[m
+                    listQuantityToCommand.Add(dataGridRow.Cells[6].Value.ToString());[m
+                    inter.createPreOrderToProduct(id_preoder, product.id_products, Int32.Parse(dataGridRow.Cells[6].Value.ToString()));[m
+                }[m
+[36m@@ -483,6 +493,7 @@[m [mnamespace Logiciel.cs.View[m
+            [m
+        }[m
+
+        [32m{+//Methode affichant le panel Panier+}[m
+        private void btn_panier_Click(object sender, EventArgs e)[m
+        {[m
+            this.panel_preorder.Visible = true;[m
+[36m@@ -494,6 +505,7 @@[m [mnamespace Logiciel.cs.View[m
+            FillDataGridViewCart();[m
+        }[m
+
+        [32m{+//Methode d'initialisation du dataGridView panier+}[m
+        private void SetupDataGridViewCart()[m
+        {[m
+            gridViewCart.ColumnCount = 4;[m
+[36m@@ -541,6 +553,7 @@[m [mnamespace Logiciel.cs.View[m
+            gridViewCart.CellClick += new DataGridViewCellEventHandler(gridViewCart_CellClick);[m
+        }[m
+
+        [32m{+//Methode remplissant le datagridview panier par rapport à la liste de checkbox+}[m 
+        public void FillDataGridViewCart()[m
+        {[m
+            Products product = new Products();[m
+[36m@@ -558,6 +571,7 @@[m [mnamespace Logiciel.cs.View[m
+            gridViewCart.Columns[3].DisplayIndex = 3;[m
+        }[m
+
+        [32m{+//Methode de listener sur certaine column du datagridView panier+}[m
+        private void gridViewCart_CellClick(object sender, DataGridViewCellEventArgs e)[m
+        {[m
+           [m
+[1mdiff --git a/View/Login.cs b/View/Login.cs[m
+[1mindex ce5ae9d..2f1f49d 100755[m
+[1m--- a/View/Login.cs[m
+[1m+++ b/View/Login.cs[m
+[36m@@ -12,7 +12,10 @@[m [mnamespace Logiciel.cs.View[m
+{[m
+    public partial class Login : Form, ILogin[m
+    {[m
+        [32m{+//Attribut listener connexion+}[m
+        public event EventHandler<EventArgs> request;[m
+
+        [32m{+//Attribut login+}[m 
+        private string email;[m
+
+        public string Email[m
+[36m@@ -32,6 +35,7 @@[m [mnamespace Logiciel.cs.View[m
+            InitializeComponent();[m
+        }[m
+
+        [32m{+//Methode connexion+}[m
+        private void click_connexion(object sender, EventArgs e)[m
+        {[m
+            EventHandler<EventArgs> request_connexion = request;[m

@@ -7,35 +7,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Logiciel.Controller;
+using Logiciel.cs.Controller;
 namespace Logiciel.cs.View
 {
-    public partial class Login : Form
+    public partial class Login : Form, ILogin
     {
+        //Attribut listener connexion
+        public event EventHandler<EventArgs> request;
+
+        //Attribut login
+        private string email;
+
+        public string Email
+        {
+            get { return email; }
+            set { email = value; }
+        }
+        private string mot_de_passe;
+
+        public string Mot_de_passe
+        {
+            get { return mot_de_passe; }
+            set { mot_de_passe = value; }
+        }
+
         public Login()
         {
             InitializeComponent();
         }
 
+        //Methode connexion
         private void click_connexion(object sender, EventArgs e)
         {
+            EventHandler<EventArgs> request_connexion = request;
+
             if (this.text_box_login.Text == "" || this.text_box_mot_de_passe.Text == "")
             {
                 MessageBox.Show("Login et/ou mot de passe est incorrect");
             }
             else
             {
-                Controller.Login.verifierLogin(this.text_box_login.Text, this.text_box_mot_de_passe.Text);
+                if (request_connexion != null)
+                {
+                    Email = this.text_box_login.Text;
+                    Mot_de_passe = this.text_box_mot_de_passe.Text;
+                    request_connexion(this, e);
+                }
             }
         }
 
-        private void label_mot_de_passe_Click(object sender, EventArgs e)
+        public override string ToString()
         {
-
+            return this.text_box_login.Text + " | " + this.text_box_mot_de_passe.Text;
         }
-
-
-
 
     }
 }

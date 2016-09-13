@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Logiciel.cs.Model
 {
-    struct Droit
+    public interface IGroups
     {
-        public int id_droits { get; set; }
-        public string droits_level { get; set; }
+        int id_groups { get; set; }
+        string groups_label { get; set; }
+        int groups_level { get; set; }
     }
 }
